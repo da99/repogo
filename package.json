@@ -1,0 +1,26 @@
+{
+  "name": "repogo",
+  "version": "0.0.0",
+  "description": "Personal rethinkdb api on top of RethinkDB client. Not fit for human consumption",
+  "main": "lib/Repogo.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/da99/repogo.git"
+  },
+  "keywords": [
+    "da99"
+  ],
+  "author": "da99",
+  "license": "MIT",
+  "dependencies": {
+    "underscore": "1.x.x",
+    "rethinkdb" : "x.x.x"
+  },
+  "devDependencies": {}
+}
