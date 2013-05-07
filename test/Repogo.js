@@ -1,91 +1,143 @@
 
 var _      = require('underscore')
-, Topogo   = require('topogo').Topogo
-, River    = require('da_river').River
 , assert   = require('assert')
-, H        = require('./helpers/main')
+, River    = require('da_river').River
+, Repogo   = require('../lib/Repogo').Repogo
 ;
 
-var table = Topogo.test_table_name.toUpperCase();
-var T     = Topogo.new(table);
-var Q     = T.pool();
-var no_fin = function () {};
+var TABLE = "REPOGO_TEST";
+before(function (done) {
 
-var R = function (done) {
-  var r = River.new(null);
-  return {
-    job : function () {
-      r.job.apply(r, arguments);
-      return this;
-    },
-    run : function () {
-      r.job(function () {
+  Repogo.tables('test', function (tables, conn, db, r) {
+
+    if (tables.indexOf(TABLE) === -1) {
+
+      db.tableCreate(TABLE, {primaryKey: 'id'}).run(conn, function (err, result) {
+        if (err) throw err;
+        console.log(result);
         done();
       });
-      r.run.apply(r, arguments);
-      return this;
+
+    } else {
+
+      db.table(TABLE).delete().run(conn, function (err, result) {
+        if (err) throw err;
+        console.log(result);
+        done();
+      });
+
     }
-  };
-};
-
-function is_recent(date) {
-  return ((new Date).getTime() - date.getTime()) < 80;
-}
-
-function rand() { return parseInt(Math.random() * 1000); }
-
-describe( 'Topogo', function () {
-
-  before(function (done) {
-    R(done)
-    .job(function (j) {
-      Topogo.run("DROP TABLE IF EXISTS \"" + table + "\";", [], j);
-    })
-    .job(function (j) {
-      Topogo.run("CREATE TABLE IF NOT EXISTS \"" + table +
-                 "\" (\n" +
-                 " id serial PRIMARY KEY, \n" +
-                 " name varchar(10), \n" +
-                 " body text ,   \n" +
-                 " $created_at , \n" +
-                 " $updated_at , \n" +
-                 " $trashed_at   \n);", [], j);
-    })
-    .run();
   });
 
-  var name = "ro ro" + rand();
-  var body = "body: " + rand();
-  var id   = "wrong_id";
+});
+
+after(function () {
+  console.log('closing')
+  Repogo.close();
+});
 
 
-
-  before(function (done) {
-    R(done)
-    .job(function (j) {
-      var sql = 'INSERT INTO \"' + table +  '\" (name, body) VALUES ($1, $2) RETURNING * ;';
-      Topogo.run(sql, [name, body], j);
-    })
-    .job(function (j, last) {
-      id = last[0].id;
-      j.finish();
-    })
-    .run();
+it( 'abc', function (done) {
+  Repogo.rethinkdb(function (conn, r) {
+    r.db('test').table(TABLE).insert({ superhero: 'Iron Man', superpower: 'Arc Reactor' })
+    .run(conn, function (err, r) {
+      done();
+    });
   });
+});
 
-  after(function (done) {
-    R(done)
-    .job(function (j) {
-      Topogo.run("DELETE FROM \"" + table + "\";", [], j);
-    })
-    .run();
+it( 'abc', function (done) {
+  Repogo.rethinkdb(function (conn, r) {
+    r.db('test').table(TABLE).insert({ superhero: 'Iron Man', superpower: 'Arc Reactor' })
+    .run(conn, function (err, r) {
+      done();
+    });
   });
+});
+
+it( 'abc', function (done) {
+  Repogo.rethinkdb(function (conn, r) {
+    r.db('test').table(TABLE).insert({ superhero: 'Iron Man', superpower: 'Arc Reactor' })
+    .run(conn, function (err, r) {
+      done();
+    });
+  });
+});
+
+it( 'abc', function (done) {
+  Repogo.rethinkdb(function (conn, r) {
+    r.db('test').table(TABLE).insert({ superhero: 'Iron Man', superpower: 'Arc Reactor' })
+    .run(conn, function (err, r) {
+      done();
+    });
+  });
+});
+
+it( 'abc', function (done) {
+  Repogo.rethinkdb(function (conn, r) {
+    r.db('test').table(TABLE).insert({ superhero: 'Iron Man', superpower: 'Arc Reactor' })
+    .run(conn, function (err, r) {
+      done();
+    });
+  });
+});
+
+it( 'abc', function (done) {
+  Repogo.rethinkdb(function (conn, r) {
+    r.db('test').table(TABLE).insert({ superhero: 'Iron Man', superpower: 'Arc Reactor' })
+    .run(conn, function (err, r) {
+      console.log(arguments);
+      done();
+    });
+  });
+});
+
+describe( 'Repogo', function () {
+
+  // before(function (done) {
+    // R(done)
+    // .job(function (j) {
+      // Repogo.run("DROP TABLE IF EXISTS \"" + table + "\";", [], j);
+    // })
+    // .job(function (j) {
+      // Repogo.run("CREATE TABLE IF NOT EXISTS \"" + table +
+                 // "\" (\n" +
+                 // " id serial PRIMARY KEY, \n" +
+                 // " name varchar(10), \n" +
+                 // " body text ,   \n" +
+                 // " $created_at , \n" +
+                 // " $updated_at , \n" +
+                 // " $trashed_at   \n);", [], j);
+    // })
+    // .run();
+  // });
+
+  // before(function (done) {
+    // R(done)
+    // .job(function (j) {
+      // var sql = 'INSERT INTO \"' + table +  '\" (name, body) VALUES ($1, $2) RETURNING * ;';
+      // Repogo.run(sql, [name, body], j);
+    // })
+    // .job(function (j, last) {
+      // id = last[0].id;
+      // j.finish();
+    // })
+    // .run();
+  // });
+
+  // after(function (done) {
+    // R(done)
+    // .job(function (j) {
+      // Repogo.run("DELETE FROM \"" + table + "\";", [], j);
+    // })
+    // .run();
+  // });
 
   describe( '.run', function () {
     it( 'uses process.DATABASE_URL by default', function (done) {
       River.new(null)
       .job(function (j) {
-        Topogo.run("SELECT now()", {}, j);
+        Repogo.run("SELECT now()", {}, j);
       })
       .job(function (j, result) {
         assert.equal(H.is_date(result[0].now), true);
@@ -105,7 +157,7 @@ describe( 'Topogo', function () {
       var body = Math.random(1000) + "";
       River.new(null)
       .job(function (j) {
-        Topogo.new(table).create({name: "hi 1", body: body}, j);
+        Repogo.new(table).create({name: "hi 1", body: body}, j);
       })
       .job(function (j, result) {
         assert.equal(result.id > 0, true);
