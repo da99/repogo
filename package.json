@@ -1,7 +1,7 @@
 {
   "name": "repogo",
   "version": "0.0.0",
-  "description": "Personal rethinkdb api on top of RethinkDB client. Not fit for human consumption",
+  "description": "Not ready.",
   "main": "lib/Repogo.js",
   "directories": {
     "test": "test"
